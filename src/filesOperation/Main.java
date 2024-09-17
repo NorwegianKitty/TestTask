@@ -1,5 +1,9 @@
 package filesOperation;
 
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
+
 public class Main {
 	
 	public static void main(String[] args) {
@@ -11,30 +15,23 @@ public class Main {
 		
 		ArgsHandler argsHandler = new ArgsHandler(args);	
 		
-		
-		System.out.println(ArgsHandler.outputFiles.OUTPUT_FILE_INTEGER.getOutputFilePath());
-		System.out.println(ArgsHandler.outputFiles.OUTPUT_FILE_FLOAT.getOutputFilePath());
-		System.out.println(ArgsHandler.outputFiles.OUTPUT_FILE_STRING.getOutputFilePath());
-		
-		System.out.println("====================================================");
-		argsHandler.ArgsPOAHandler();
-		
-		System.out.println(ArgsHandler.outputFiles.OUTPUT_FILE_INTEGER.getOutputFilePath());
-		System.out.println(ArgsHandler.outputFiles.OUTPUT_FILE_FLOAT.getOutputFilePath());
-		System.out.println(ArgsHandler.outputFiles.OUTPUT_FILE_STRING.getOutputFilePath());
-		
-		//argsHandler.FileRecording();
-		//argsHandler.ArgsSFHandler();
-		System.out.println(argsHandler.getInputFiles());
+		try {
+			argsHandler.ArgsPOAHandler(); // Обработка действий для арг. -p -o -a	
+		} catch (Exception e) {
+			System.out.println("Ошибка: " + e.getMessage());
+		}
 
-		FileHandler fileHandler = new FileHandler(argsHandler);
+		// Те если набор входных файлов не пустой
+		if(!argsHandler.getInputFiles().isEmpty()) {
+			
+			FileHandler fileHandler = new FileHandler(argsHandler);
+			fileHandler.processFiles(); // Чтение, создание иди добавление, сортировка
+		}
+
+		argsHandler.ArgsSFHandler(); // Отображение статистики
+
+
 	
 	}
 
 }
-
-//isArgP = false; // Set custom prefix       
-//isArgO = false; // Custom directory        
-//isArgA = false; // Adding to files mod     
-//isArgS = false; // Display short statistics
-//isArgF = false; // Display full statistics 

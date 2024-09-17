@@ -10,8 +10,7 @@ import java.util.Set;
 
 public class ArgsHandler {
 
-	public static OutputFilesEnum outputFiles;
-	//PRIVATE ЧТО ВЫШЕ
+	private static OutputFilesEnum outputFiles;
 	private String[] args;
 	private Set<String> inputFiles = new HashSet<>();
     private boolean isAdding = false; 
@@ -29,11 +28,10 @@ public class ArgsHandler {
         while (argIterator.hasNext()) {
             String arg = argIterator.next();
             boolean isSwitchWorked = false;
-            System.out.println(arg);
             
             switch(arg) {  
             
-            	case "-p": //Добавить проверку на .txt и тп
+            	case "-p":
             		isSwitchWorked = true;
             		
             		if(argIterator.hasNext()) {
@@ -69,7 +67,7 @@ public class ArgsHandler {
         }
 	}
 
-	// [x]
+	// ✅
 	public void ArgsSFHandler() {
 		
 		final Iterator<String> argIterator = Arrays.asList(args).iterator();
@@ -88,7 +86,7 @@ public class ArgsHandler {
         }
 	}
 	
-	// Prefix ✅ try-catch ✅
+	// Пользовательский Префикс ✅ try-catch ✅
 	private void ArgPAction(String prefix) {
 		
 		// Если длинна префикса + самое длинное название (integers) > 255, то в Windows такое недопустимо =>
@@ -129,7 +127,7 @@ public class ArgsHandler {
 		}
 	}
 	
-	// CustomDirectory ✅ try-catch не нужен
+	// Пользовательская директория для выходных файлов ✅ try-catch не нужен
 	private void ArgOAction(String path) {
 
 		Path dirPath = Paths.get(path);
@@ -146,17 +144,17 @@ public class ArgsHandler {
 	    }
 	}
 
-	// Turn on adding mode ✅ try-catch не нужен
+	// Включаем режим добавление в существующие файлы ✅ try-catch не нужен
 	private void ArgAAction() {
 		isAdding = true;
 	}
 	
-	// Display short statistics [x]
+	// Отобразить короткую статистику [x]
 	private void ArgSAction() {
 		
 	}
 	
-	// Display full statistics [x]
+	// Отобразить полную статистику [x]
 	private void ArgFAction() {
 		ArgSAction(); // и дополнить
 	}
@@ -180,6 +178,14 @@ public class ArgsHandler {
 	public void setAdding(boolean isAdding) {
 		this.isAdding = isAdding;
 	}
-
 	
+
+	public static OutputFilesEnum getOutputFiles() {
+		return outputFiles;
+	}
+	
+
+	public static void setOutputFiles(OutputFilesEnum outputFiles) {
+		ArgsHandler.outputFiles = outputFiles;
+	}
 }

@@ -5,11 +5,6 @@ public class Main {
 	
 	public static void main(String[] args) {
 		
-		String[] testArr = {"-a", "-p", "sample-", "-o", "-f",
-				"C:\\Users\\Melinsa\\Desktop\\myJava", "in1.txt"};
-		
-		args = testArr;
-		
 		ArgsHandler argsHandler = new ArgsHandler(args);	
 		
 		try {
@@ -19,7 +14,7 @@ public class Main {
 			if(!argsHandler.getInputFiles().isEmpty()) {
 				
 				FileHandler fileHandler = new FileHandler(argsHandler);
-				fileHandler.processFiles(); // Чтение, создание иди добавление, сортировка
+				fileHandler.processFiles(); // Чтение, создание или добавление, сортировка
 				
 				argsHandler.ArgsSFHandler(fileHandler.getFileStat()); // Отображение статистики
 			}
@@ -27,12 +22,5 @@ public class Main {
 		} catch (Exception e) {
 			System.out.println("Ошибка: " + e.getMessage());
 		}
-
-
-		
-
-
-	
 	}
-
 }

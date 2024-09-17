@@ -76,5 +76,6 @@ public class FileStatistics {
 		int[] iArr = {minStrLength, maxStrLength};
 		return iArr;		
 	}
-	
 }
+
+

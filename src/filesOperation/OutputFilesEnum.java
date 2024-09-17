@@ -1,5 +1,6 @@
 package filesOperation;
 
+
 public enum OutputFilesEnum {
 	
 	DEFAULT("default.txt"),
@@ -15,6 +16,7 @@ public enum OutputFilesEnum {
 	private final String DEFAULT_FILE_NAME;
 	
 	private OutputFilesEnum(String fileName) {
+		
 		DEFAULT_FILE_NAME = fileName;
 		this.fileName = DEFAULT_FILE_NAME;
 		
@@ -67,3 +69,5 @@ public enum OutputFilesEnum {
 		return DEFAULT_DIRECTORY_PATH + "\\" + DEFAULT_FILE_NAME;
 	}
 }
+
+

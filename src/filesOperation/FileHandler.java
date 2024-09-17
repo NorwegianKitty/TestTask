@@ -8,6 +8,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 
+
 public class FileHandler {
 
 	private ArgsHandler argsHandler;
@@ -32,15 +33,16 @@ public class FileHandler {
 	    for (String file : argsHandler.getInputFiles()) {
 	        
 	        Reader fileReader;
+	        
 	        try {
 	            fileReader = new FileReader(file);
 	            Scanner sc = new Scanner(fileReader);
 	            
-	            while (sc.hasNextLine()) { // Проверяем, есть ли следующая строка
+	            while (sc.hasNextLine()) {
 	                String line = sc.nextLine();
 	                
-	                if (line != null && !line.isEmpty()) { // Пропускаем null или пустые строки
-	                    writeFile(sort(line)); // Обрабатываем строку
+	                if (line != null && !line.isEmpty()) {
+	                    writeFile(sort(line));
 	                }
 	            }
 	            sc.close();
@@ -50,7 +52,6 @@ public class FileHandler {
 	    }    
 	}
 	
-	// Добавить проверку, что если adding (ошибка файл не сущ. создать файл по умолч)
 	public void writeFile(HashMap<String, Object> typeNameAndValue) {
 		
 		String key = typeNameAndValue.keySet().iterator().next();
@@ -106,46 +107,50 @@ public class FileHandler {
 		}
 	}
 	
-	// ✅ try-catch ✅
 	private String checkFilesPath(String typeToFile) {
+		
 		String pass = null;
 		File file;
 		
 		switch(typeToFile) {
 		
-		case "int":
-	        file = getFile(isOutIntFileExsist, ArgsHandler.getOutputFiles().OUTPUT_FILE_INTEGER);
-	        if (file == null) {
-	            System.out.println("Запись в файл с int вестись не будет.");
-	            return null;
-	        }
-	        return file.getAbsolutePath();
-	        
-		case "float":
-			file = getFile(isOutFloatFileExsist, ArgsHandler.getOutputFiles().OUTPUT_FILE_FLOAT);
-	        if (file == null) {
-	            System.out.println("Запись в файл с float вестись не будет.");
-	            return null;
-	        }
-	        return file.getAbsolutePath();
-		
-		case "str":
-			file = getFile(isOutStrFileExsist, ArgsHandler.getOutputFiles().OUTPUT_FILE_STRING);
-	        if (file == null) {
-	            System.out.println("Запись в файл с String вестись не будет.");
-	            return null;
-	        }
-	        return file.getAbsolutePath();		
-		}
-		
+			case "int":
+		        file = getFile(isOutIntFileExsist, ArgsHandler.getOutputFiles().OUTPUT_FILE_INTEGER);
+		        
+		        if (file == null) {
+		            System.out.println("Запись в файл с int вестись не будет.");
+		            return null;
+		        }
+		        return file.getAbsolutePath();
+		        
+			case "float":
+				file = getFile(isOutFloatFileExsist, ArgsHandler.getOutputFiles().OUTPUT_FILE_FLOAT);
+				
+		        if (file == null) {
+		            System.out.println("Запись в файл с float вестись не будет.");
+		            return null;
+		        }
+		        return file.getAbsolutePath();
+			
+			case "str":
+				file = getFile(isOutStrFileExsist, ArgsHandler.getOutputFiles().OUTPUT_FILE_STRING);
+				
+		        if (file == null) {
+		            System.out.println("Запись в файл с String вестись не будет.");
+		            return null;
+		        }
+		        return file.getAbsolutePath();		        				
+			}		
 		return pass;		
 	}
 	
 	private File getFile(boolean isFileExist, OutputFilesEnum outputFile) {
+		
 	    File file;
 	    
 	    if (isFileExist) {
 	        file = new File(outputFile.getOutputFilePath());
+	        
 	        if (!file.exists()) {
 	            System.out.println("Файл не существует. Попробуем создать новый.");
 	            file = createNewFile(outputFile.getOutputFilePath(), outputFile.getDefaultOutputPass(), outputFile);
@@ -154,11 +159,11 @@ public class FileHandler {
 	        file = createNewFile(outputFile.getOutputFilePath(), outputFile.getDefaultOutputPass(), outputFile);
 	        isOutIntFileExsist = file != null;
 	    }
-	    
 	    return file;
 	}
 
 	private File createNewFile(String outputPath, String defaultPath, OutputFilesEnum outputFile) {
+		
 	    File file = new File(outputPath);
 	    
 	    try (FileWriter writer = new FileWriter(file)) {
@@ -169,6 +174,7 @@ public class FileHandler {
 	        	+ ". Попробуем создать по пути по умолчанию.");
 	        
 	        file = new File(defaultPath);
+	        
 	        try (FileWriter writer = new FileWriter(file)) {
 	            outputFile.setOutputFilePath(defaultPath);
 	            return file;
@@ -179,15 +185,14 @@ public class FileHandler {
 	    }
 	}
 
-	// ✅ try-catch ✅
 	private HashMap<String, Object> sort(String line) {
-		//switch на float, int, str
+
 		HashMap<String, Object> typeNameAndValue = new HashMap<String, Object>();
+		
 		try {
 			int iTemp = transformToInt(line);
 			typeNameAndValue.put("int", iTemp);
 		} catch (Exception e1) {
-			
 			try {
 				float fTemp = transformToFloat(line);
 				typeNameAndValue.put("float", fTemp);				
@@ -195,12 +200,11 @@ public class FileHandler {
 				typeNameAndValue.put("str", line);
 			}			
 		}		
-		
 		return typeNameAndValue;
 	}
 	
-	// ✅
 	private int transformToInt(String str) throws Exception {
+		
 		try {
 			int iTemp = Integer.parseInt(str);
 			return iTemp;
@@ -209,8 +213,8 @@ public class FileHandler {
 		}		
 	}
 	
-	// ✅
 	private float transformToFloat(String str) throws Exception {
+		
 		try {
 			float fTemp = Float.parseFloat(str);
 			return fTemp;
@@ -218,16 +222,14 @@ public class FileHandler {
 			throw new Exception();
 		}		
 	}
-
 	
 	public FileStatistics getFileStat() {
 		return fileStat;
 	}
 	
-
 	public void setFileStat(FileStatistics fileStat) {
 		this.fileStat = fileStat;
 	}
-	
-	
 }
+
+

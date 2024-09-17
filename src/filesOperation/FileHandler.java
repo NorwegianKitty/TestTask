@@ -29,18 +29,24 @@ public class FileHandler {
 	
 	public void processFiles() {
 
-		for(String file : argsHandler.getInputFiles()) {
-			
-			Reader fileReader;
-			try {
-				fileReader = new FileReader(file);
-				Scanner sc = new Scanner(fileReader);
-				
-				writeFile(sort(sc.nextLine()));
-			} catch (FileNotFoundException e) {
-				System.out.println("Ошибка при чтении файла: " + e.getMessage());
-			}
-		}	
+	    for (String file : argsHandler.getInputFiles()) {
+	        
+	        Reader fileReader;
+	        try {
+	            fileReader = new FileReader(file);
+	            Scanner sc = new Scanner(fileReader);
+	            
+	            while (sc.hasNextLine()) { // Проверяем, есть ли следующая строка
+	                String line = sc.nextLine();
+	                
+	                if (line != null && !line.isEmpty()) { // Пропускаем null или пустые строки
+	                    writeFile(sort(line)); // Обрабатываем строку
+	                }
+	            }
+	        } catch (FileNotFoundException e) {
+	            System.out.println("Ошибка при чтении файла: " + e.getMessage());
+	        }
+	    }    
 	}
 	
 	// Добавить проверку, что если adding (ошибка файл не сущ. создать файл по умолч)

@@ -11,11 +11,11 @@ import java.io.FileReader;
 public class FileHandler {
 
 	private ArgsHandler argsHandler;
+	private FileStatistics fileStat = new FileStatistics();
+	
 	private boolean isOutIntFileExsist = false;
 	private boolean isOutFloatFileExsist = false;
 	private boolean isOutStrFileExsist = false;
-	
-	//Отдельный класс для статистики и сюда объект этого класса, сделать 2ой конструктор
 	
 	public FileHandler(ArgsHandler argsHandler) {
 		this.argsHandler = argsHandler;
@@ -43,6 +43,7 @@ public class FileHandler {
 	                    writeFile(sort(line)); // Обрабатываем строку
 	                }
 	            }
+	            sc.close();
 	        } catch (FileNotFoundException e) {
 	            System.out.println("Ошибка при чтении файла: " + e.getMessage());
 	        }
@@ -64,6 +65,7 @@ public class FileHandler {
 	                try (FileWriter writer = new FileWriter(pass, true)) {
 	                    writer.write(value.toString());
 	                    writer.write("\n");
+	                    fileStat.updateInt((Integer) value);
 	                } catch (Exception e) {
 	                    System.out.println("Ошибка записи файла (" + key + ") "+ e.getMessage());
 	                }
@@ -77,6 +79,7 @@ public class FileHandler {
 	                try (FileWriter writer = new FileWriter(pass, true)) {
 	                    writer.write(value.toString());
 	                    writer.write("\n");
+	                    fileStat.updateFloat((Float) value);
 	                } catch (Exception e) {
 	                    System.out.println("Ошибка записи файла (" + key + ") "+ e.getMessage());
 	                }
@@ -90,6 +93,7 @@ public class FileHandler {
 	                try (FileWriter writer = new FileWriter(pass, true)) {
 	                    writer.write((String) value);
 	                    writer.write("\n");
+	                    fileStat.updateString((String) value);
 	                } catch (Exception e) {
 	                    System.out.println("Ошибка записи файла (" + key + ") "+ e.getMessage());
 	                }
@@ -213,6 +217,16 @@ public class FileHandler {
 		} catch (Exception e) {
 			throw new Exception();
 		}		
+	}
+
+	
+	public FileStatistics getFileStat() {
+		return fileStat;
+	}
+	
+
+	public void setFileStat(FileStatistics fileStat) {
+		this.fileStat = fileStat;
 	}
 	
 	

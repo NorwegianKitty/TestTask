@@ -1,26 +1,26 @@
 package filesOperation;
 
+import java.nio.channels.Pipe.SourceChannel;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
 public class ArgsHandler {
 
-	private static OutputFilesEnum outputFiles;
+	public static OutputFilesEnum outputFiles;
 	private String[] args;
 	private Set<String> inputFiles = new HashSet<>();
     private boolean isAdding = false; 
     
-    // ✅
 	public ArgsHandler(String[] args) {
 		this.args = args;
 	}
 	
-	// ✅
 	public void ArgsPOAHandler() {
 		
         final Iterator<String> argIterator = Arrays.asList(args).iterator();
@@ -68,7 +68,7 @@ public class ArgsHandler {
 	}
 
 	// ✅
-	public void ArgsSFHandler() {
+	public void ArgsSFHandler(FileStatistics fileStat) {
 		
 		final Iterator<String> argIterator = Arrays.asList(args).iterator();
 		
@@ -77,16 +77,16 @@ public class ArgsHandler {
         
             switch(arg) {
             	case "-s":
-            		ArgSAction();
+            		ArgSAction(fileStat);
             		break;
             	case "-f":
-            		ArgFAction();
+            		ArgFAction(fileStat);
             		break;            
             }        
         }
 	}
 	
-	// Пользовательский Префикс ✅ try-catch ✅
+	// Пользовательский Префикс 
 	private void ArgPAction(String prefix) {
 		
 		// Если длинна префикса + самое длинное название (integers) > 255, то в Windows такое недопустимо =>
@@ -127,7 +127,7 @@ public class ArgsHandler {
 		}
 	}
 	
-	// Пользовательская директория для выходных файлов ✅ try-catch не нужен
+	// Пользовательская директория для выходных файлов
 	private void ArgOAction(String path) {
 
 		Path dirPath = Paths.get(path);
@@ -149,18 +149,120 @@ public class ArgsHandler {
 		isAdding = true;
 	}
 	
-	// Отобразить короткую статистику [x]
-	private void ArgSAction() {
+	// Отобразить короткую статистику
+	private HashMap<Integer, int[]> ArgSAction(FileStatistics fileStat) {
 		
+		int[] statArr = fileStat.shortStat();
+		
+		String[] fileNamesArr = {"File names:",
+				outputFiles.OUTPUT_FILE_INTEGER.getFileName(),
+				outputFiles.OUTPUT_FILE_FLOAT.getFileName(),
+				outputFiles.OUTPUT_FILE_STRING.getFileName() };
+		
+		int[] indexArr = new int[3]; //Если в файле 0 записей, информацию о файле выводить не будем
+		
+		int maxFileNameLength = 0;
+		
+		for(int i = 0; i < statArr.length; i++) {
+			
+			if(statArr[i] > 0) {
+				indexArr[i] = 1;
+				
+				if(fileNamesArr[i].length() > maxFileNameLength) {
+					maxFileNameLength = fileNamesArr[i].length(); //Для форматирования
+				}
+			}
+		}
+		// Теперь у нас есть массив вида 1 0 1, где 1 - выводим данные и размер для форматирования
+		
+		if(indexArr[0] == indexArr[1] && indexArr[1] == indexArr[2] && indexArr[2] == 0) {
+			return null; // у нас нет файлов для отображения статистики
+		}
+		
+		int offset = maxFileNameLength + 5;
+
+		for (int i = 0; i < fileNamesArr.length; i++) {
+			
+			if(i == 0 || indexArr[i-1] == 1) {
+				System.out.print(String.format("%-" + offset + "s", fileNamesArr[i]));			
+			}
+		}
+		
+		System.out.println("\n");
+		for (int i = 0; i < statArr.length; i++) {
+			
+			if(i == 0) {
+				System.out.print(String.format("%-" + offset + "s", "Count:"));
+			}
+			
+			if(indexArr[i] == 1) {				
+				System.out.print(String.format("%-" + offset + "d", statArr[i]));			
+			}
+		}
+		
+		HashMap<Integer, int[]> mapToreturn = new HashMap<Integer, int[]>();
+		mapToreturn.put(offset, indexArr);
+		return mapToreturn;
 	}
 	
 	// Отобразить полную статистику [x]
-	private void ArgFAction() {
-		ArgSAction(); // и дополнить
+	private void ArgFAction(FileStatistics fileStat) {
+		
+		HashMap<Integer, int[]> tempMap = ArgSAction(fileStat); //ключ - длина отсутпа, значение массив индексов
+		
+		if (tempMap != null && !tempMap.isEmpty()) {
+		    int offset = tempMap.keySet().iterator().next();
+		    int[] indexArr = tempMap.get(offset);
+		    
+			int[] iStat = fileStat.iReturnStat();
+			float[] fStat = fileStat.fReturnStat();
+			int[] strStat = fileStat.strReturnStat();
+
+			displayFunc(offset, indexArr, iStat, fStat, strStat, 0, "Min:");
+			displayFunc(offset, indexArr, iStat, fStat, strStat, 1, "Max:");
+			displayFuncSumAvg(offset, indexArr, iStat, fStat, 2, "Summa:", fileStat.shortStat());
+			
+
+			
+		} else {
+		    System.out.println("Статистика не может быть выведена!");
+		}		
+		
 	}
 	
+	private void displayFunc(int offset, int[] indexArr, int[] iStat, float[] fStat, int[] strStat, int i
+			, String text) {
+		System.out.print("\n");
+		System.out.print(String.format("%-" + offset + "s", text));
+		if(indexArr[0] == 1) System.out.print(String.format("%-" + offset + "d", iStat[i]));	
+		if(indexArr[1] == 1) System.out.print(String.format("%-" + offset + "f", fStat[i]));	
+		if(indexArr[2] == 1) System.out.print(String.format("%-" + offset + "d", strStat[i]));	
+	}
 
-	public Set<String> getInputFiles() {
+	private void displayFuncSumAvg(int offset, int[] indexArr, int[] iStat, float[] fStat, int i,
+			String text, int[] counter) {
+		
+		System.out.print("\n");
+		System.out.print(String.format("%-" + offset + "s", text));
+		if(indexArr[0] == 1) System.out.print(String.format("%-" + offset + "d", iStat[i]));	
+		if(indexArr[1] == 1) System.out.print(String.format("%-" + offset + "f", fStat[i]));	
+		if(indexArr[2] == 1) System.out.print(String.format("%-" + offset + "s", "-"));
+		
+		System.out.print("\n");
+		System.out.print(String.format("%-" + offset + "s", "Average:"));
+		try {
+			if(indexArr[0] == 1) System.out.print(String.format("%-" + offset + "d", iStat[i]/counter[0]));			
+		} catch (Exception e) {
+			if(indexArr[0] == 1) System.out.print(String.format("%-" + offset + "f", iStat[i]/counter[0]));	
+		}
+		
+		if(indexArr[1] == 1) System.out.print(String.format("%-" + offset + "f", fStat[i]/counter[1]));	
+		if(indexArr[2] == 1) System.out.print(String.format("%-" + offset + "s", "-"));
+		
+	}
+	
+	
+ 	public Set<String> getInputFiles() {
 		return inputFiles;
 	}
 	

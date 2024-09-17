@@ -8,7 +8,7 @@ public class Main {
 		ArgsHandler argsHandler = new ArgsHandler(args);	
 		
 		try {
-			argsHandler.ArgsPOAHandler(); // Обработка действий для арг. -p -o -a	
+			argsHandler.argsPOAHandler(); // Обработка действий для арг. -p -o -a	
 			
 			// Те если набор входных файлов не пустой
 			if(!argsHandler.getInputFiles().isEmpty()) {
@@ -16,7 +16,7 @@ public class Main {
 				FileHandler fileHandler = new FileHandler(argsHandler);
 				fileHandler.processFiles(); // Чтение, создание или добавление, сортировка
 				
-				argsHandler.ArgsSFHandler(fileHandler.getFileStat()); // Отображение статистики
+				argsHandler.argsSFHandler(fileHandler.getFileStat()); // Отображение статистики
 			}
 			
 		} catch (Exception e) {

@@ -50,7 +50,7 @@ public enum OutputFilesEnum {
 		this.outputFilePath = outputFilePath;
 	}
 
-	public void CorrectDirectoryPathOrFileName(String directoryPathOrFileName, boolean isPass) {
+	public void correctDirectoryPathOrFileName(String directoryPathOrFileName, boolean isPass) {
 		
 		if(isPass) {
 			setDirectoryPath(directoryPathOrFileName);			

@@ -21,7 +21,7 @@ public class ArgsHandler {
 		this.args = args;
 	}
 	
-	public void ArgsPOAHandler() {
+	public void argsPOAHandler() {
 		
         final Iterator<String> argIterator = Arrays.asList(args).iterator();
 		
@@ -36,7 +36,7 @@ public class ArgsHandler {
             		if(argIterator.hasNext()) {
             			
             			String prefix = argIterator.next();
-            			ArgPAction(prefix);
+            			argPAction(prefix);
             		}
             		break;	
             	case "-o":
@@ -45,13 +45,13 @@ public class ArgsHandler {
             		if(argIterator.hasNext()) {
             			
             			String path = argIterator.next();
-            			ArgOAction(path);
+            			argOAction(path);
             		}
             		break;
             	case "-a": 
             		isSwitchWorked = true;
             		
-            		ArgAAction();            		
+            		argAAction();            		
             		break;            	
             }
             
@@ -63,7 +63,7 @@ public class ArgsHandler {
         }
 	}
 
-	public void ArgsSFHandler(FileStatistics fileStat) {
+	public void argsSFHandler(FileStatistics fileStat) {
 		
 		final Iterator<String> argIterator = Arrays.asList(args).iterator();
 		
@@ -72,17 +72,17 @@ public class ArgsHandler {
         
             switch(arg) {
             	case "-s":
-            		ArgSAction(fileStat);
+            		argSAction(fileStat);
             		break;
             	case "-f":
-            		ArgFAction(fileStat);
+            		argFAction(fileStat);
             		break;            
             }        
         }
 	}
 	
 	// Пользовательский Префикс 
-	private void ArgPAction(String prefix) {
+	private void argPAction(String prefix) {
 		
 		// Если длинна префикса + самое длинное название (integers) > 255, то в Windows такое недопустимо =>
 		if(prefix.length() + 8 > 255) { // Обрезаем префикс, оставляя в сохранности все каноничные названия файлов
@@ -108,7 +108,7 @@ public class ArgsHandler {
 		if(isIncorrectChar == false) {
 			try {
 				for(OutputFilesEnum outputFiles : OutputFilesEnum.values()) {
-					outputFiles.CorrectDirectoryPathOrFileName(prefix, false);
+					outputFiles.correctDirectoryPathOrFileName(prefix, false);
 				}
 			} catch (Exception e) {
 				System.out.println("Ошибка: " + e.getMessage() + ", при попытки установки префикса для имен файлов.");
@@ -122,13 +122,13 @@ public class ArgsHandler {
 	}
 	
 	// Пользовательская директория для выходных файлов
-	private void ArgOAction(String path) {
+	private void argOAction(String path) {
 
 		Path dirPath = Paths.get(path);
 		
 	    if (Files.exists(dirPath) && Files.isDirectory(dirPath)) {
 	        for (OutputFilesEnum outputFiles : OutputFilesEnum.values()) {
-	            outputFiles.CorrectDirectoryPathOrFileName(path, true);
+	            outputFiles.correctDirectoryPathOrFileName(path, true);
 	        }
 	    } else {
 	        System.out.println("Ошибка в параметре для аргумента \"-o\". Параметр: " + path);
@@ -139,12 +139,12 @@ public class ArgsHandler {
 	}
 
 	// Включаем режим добавление в существующие файлы 
-	private void ArgAAction() {
+	private void argAAction() {
 		isAdding = true;
 	}
 	
 	// Отобразить короткую статистику
-	private HashMap<Integer, int[]> ArgSAction(FileStatistics fileStat) {
+	private HashMap<Integer, int[]> argSAction(FileStatistics fileStat) {
 		
 		int[] statArr = fileStat.shortStat();
 		
@@ -205,9 +205,9 @@ public class ArgsHandler {
 	}
 	
 	// Отобразить полную статистику
-	private void ArgFAction(FileStatistics fileStat) {
+	private void argFAction(FileStatistics fileStat) {
 		
-		HashMap<Integer, int[]> tempMap = ArgSAction(fileStat); // Ключ - длина отсутпа, значение массив индексов
+		HashMap<Integer, int[]> tempMap = argSAction(fileStat); // Ключ - длина отсутпа, значение массив индексов
 		
 		if (tempMap != null && !tempMap.isEmpty()) {
 		    int offset = tempMap.keySet().iterator().next();

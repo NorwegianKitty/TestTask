@@ -68,6 +68,10 @@ public enum OutputFilesEnum {
 	public String getDefaultOutputPass() {
 		return DEFAULT_DIRECTORY_PATH + "\\" + DEFAULT_FILE_NAME;
 	}
+
+	public String getDEFAULT_FILE_NAME() {
+		return DEFAULT_FILE_NAME;
+	}
 }
 
 

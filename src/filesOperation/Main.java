@@ -5,6 +5,10 @@ public class Main {
 	
 	public static void main(String[] args) {
 		
+		String[] testArr = {"-f", "-p", "sample-", "in1.txt"};
+		
+		args = testArr;
+		
 		ArgsHandler argsHandler = new ArgsHandler(args);	
 		
 		try {

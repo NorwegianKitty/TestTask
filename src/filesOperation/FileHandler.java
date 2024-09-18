@@ -157,7 +157,10 @@ public class FileHandler {
 	        }
 	    } else {
 	        file = createNewFile(outputFile.getOutputFilePath(), outputFile.getDefaultOutputPass(), outputFile);
-	        isOutIntFileExsist = file != null;
+	        
+	        if(outputFile.getDEFAULT_FILE_NAME() == "integers.txt") isOutIntFileExsist = file != null;
+	        else if (outputFile.getDEFAULT_FILE_NAME() == "floats.txt") isOutFloatFileExsist = file != null;
+	        else if (outputFile.getDEFAULT_FILE_NAME() == "strings.txt") isOutStrFileExsist = file != null;
 	    }
 	    return file;
 	}
